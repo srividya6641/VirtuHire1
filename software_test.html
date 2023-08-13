@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtuHire - Interview Questions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      background-color: peachpuff;
+    }
+
+    #captionContainer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: blue;
+      font-size: 20px;
+    }
+
+    #continueButton {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <img src="C:\Users\user\Pictures\Screenshots\logo2.jpg" width="50" height="50" alt="VirtuHire">
+        <a href="VHedited.html" class="btn btn-primary">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="interview-questions">
+    <div class="container">
+      <h3>Quiz on Interview based questions on <span id="selectedDomain">Software Testing</span></h3>
+      <div id="quiz">
+        <p id="question">Question 1. What is the difference between Verification and Validation in software testing?</p>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="a" id="answerA">
+            Verification is the process of evaluating work-products, while Validation is the process of evaluating the final product to check whether the software meets the specified requirements.
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="b" id="answerB">
+            Verification is the process of evaluating the final product, while Validation is the process of evaluating work-products to check whether the software meets the specified requirements.
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="c" id="answerC">
+            Verification is the process of evaluating whether the software is feasible, while Validation is the process of evaluating the correctness of the software.
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="d" id="answerD">
+            Verification and Validation are the same processes in software testing.
+          </label>
+        </div>
+        <p id="timer">30 seconds remaining</p>
+        <button onclick="checkAnswer()">Submit Answer</button>
+      </div>
+      <p id="result"></p>
+      <div id="captionContainer"></div>
+    </div>
+  </section>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDomain = urlParams.get('domain');
+    const selectedDomainElement = document.getElementById('selectedDomain');
+    selectedDomainElement.textContent = selectedDomain || 'Software Testing';
+
+    const quizData = [
+      {
+        question: "1. What is the difference between Verification and Validation in software testing?",
+        answers: {
+          a: "Verification is the process of evaluating work-products, while Validation is the process of evaluating the final product to check whether the software meets the specified requirements.",
+          b: "Verification is the process of evaluating the final product, while Validation is the process of evaluating work-products to check whether the software meets the specified requirements.",
+          c: "Verification is the process of evaluating whether the software is feasible, while Validation is the process of evaluating the correctness of the software.",
+          d: "Verification and Validation are the same processes in software testing.",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "2. What is the difference between Test Plan and Test Strategy?",
+        answers: {
+          a: "Test Plan outlines the approach and scope of testing, while Test Strategy outlines the test design and test cases.",
+          b: "Test Plan outlines the test design and test cases, while Test Strategy outlines the approach and scope of testing.",
+          c: "Test Plan and Test Strategy are the same documents in software testing.",
+          d: "Test Plan focuses on long-term goals, while Test Strategy focuses on short-term goals.",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "3. What is Regression Testing?",
+        answers: {
+          a: "Testing the software to ensure that it works in different operating systems.",
+          b: "Testing the software to ensure that it works with different databases.",
+          c: "Testing the software to ensure that new changes or enhancements do not adversely affect existing functionality.",
+          d: "Testing the software to ensure that it can handle a large number of users.",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "4. What is the purpose of Test Cases in software testing?",
+        answers: {
+          a: "To define the scope of testing.",
+          b: "To execute the testing process.",
+          c: "To document the testing process and results.",
+          d: "To design the test environment.",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "5. What is a Test Scenario?",
+        answers: {
+          a: "A high-level document that outlines the overall testing strategy.",
+          b: "A detailed step-by-step procedure to execute a test case.",
+          c: "A test environment used for executing test cases.",
+          d: "A specific test condition or situation to be tested.",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "6. What is Boundary Testing?",
+        answers: {
+          a: "Testing the software at the boundary of different network segments.",
+          b: "Testing the software to check how it handles invalid input at the edge or boundary conditions.",
+          c: "Testing the software at the boundary of different time zones.",
+          d: "Testing the software to check how it handles large volumes of data.",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "7. What is the difference between Smoke Testing and Sanity Testing?",
+        answers: {
+          a: "Smoke Testing is performed by developers, while Sanity Testing is performed by testers.",
+          b: "Smoke Testing is performed manually, while Sanity Testing is automated.",
+          c: "Smoke Testing is a subset of Sanity Testing.",
+          d: "Smoke Testing verifies critical functionalities, while Sanity Testing verifies specific functionalities.",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "8. What is the difference between Test Scenario and Test Case?",
+        answers: {
+          a: "Test Scenario is a detailed step-by-step procedure to execute a test case, while Test Case is a high-level document that outlines the overall testing strategy.",
+          b: "Test Scenario outlines the test design and test cases, while Test Case outlines the approach and scope of testing.",
+          c: "Test Scenario focuses on long-term goals, while Test Case focuses on short-term goals.",
+          d: "Test Scenario is a specific test condition or situation to be tested, while Test Case documents the testing process and results.",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "9. What is Negative Testing?",
+        answers: {
+          a: "Testing the software to ensure that it can handle a large number of users.",
+          b: "Testing the software to ensure that it works with different databases.",
+          c: "Testing the software to check how it handles invalid or unexpected inputs.",
+          d: "Testing the software to ensure that it works in different operating systems.",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "10. What is the purpose of Test Closure?",
+        answers: {
+          a: "To document the final test results.",
+          b: "To design the test environment.",
+          c: "To execute the testing process.",
+          d: "To define the scope of testing.",
+        },
+        correctAnswer: "a"
+      }
+    ];
+
+    const questionElement = document.getElementById('question');
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timer');
+    const captionContainer = document.getElementById('captionContainer');
+
+    let currentQuestion = 0;
+    let userResponses = [];
+    let questionTimer;
+    let timeLeft = 30;
+
+    function showQuestion() {
+      clearInterval(questionTimer);
+      timeLeft = 30;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      const currentQuizData = quizData[currentQuestion];
+      questionElement.textContent = currentQuizData.question;
+
+      const options = Object.entries(currentQuizData.answers);
+      options.forEach(([optionKey, optionValue]) => {
+        document.getElementById(`answer${optionKey.toUpperCase()}`).nextSibling.textContent = optionValue;
+      });
+
+      questionTimer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      if (timeLeft === 0) {
+        clearInterval(questionTimer);
+        userResponses.push(null);
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      clearInterval(questionTimer);
+
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+      if (!selectedAnswer) {
+        userResponses.push(null);
+      } else {
+        const userAnswer = selectedAnswer.value;
+        userResponses.push(userAnswer);
+      }
+
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion();
+      } else {
+        showReview();
+      }
+    }
+
+    function showReview() {
+      document.getElementById('quiz').style.display = 'none';
+      timerElement.style.display = 'none';
+
+      let reviewHTML = '<h2>Quiz Review</h2>';
+      for (let i = 0; i < quizData.length; i++) {
+        const currentQuizData = quizData[i];
+        const userAnswer = userResponses[i];
+        const correctAnswer = currentQuizData.correctAnswer;
+
+        reviewHTML += `<p>Question ${i + 1}: ${currentQuizData.question}</p>`;
+        reviewHTML += `<p>Your Answer: ${userAnswer ? currentQuizData.answers[userAnswer] : 'Not attempted'}</p>`;
+        reviewHTML += `<p>Correct Answer: ${currentQuizData.answers[correctAnswer]}</p>`;
+        reviewHTML += '<hr>';
+      }
+
+      resultElement.innerHTML = reviewHTML;
+
+      showDoneButton();
+    }
+
+    function showDoneButton() {
+      const doneButton = document.createElement('button');
+      doneButton.textContent = 'Done';
+      doneButton.addEventListener('click', showCaptionAndContinue);
+      captionContainer.appendChild(doneButton);
+    }
+
+    function showCaptionAndContinue() {
+      captionContainer.textContent = 'All the best for your interview!';
+      captionContainer.style.color = 'blue';
+
+      const continueButton = document.createElement('button');
+      continueButton.textContent = 'Continue';
+      continueButton.addEventListener('click', redirectToHomePage);
+      captionContainer.appendChild(continueButton);
+    }
+
+    function redirectToHomePage() {
+      window.location.href = 'VHedited.html';
+    }
+    showQuestion();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

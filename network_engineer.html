@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtuHire - Interview Questions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      background-color: peachpuff;
+    }
+
+    #captionContainer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: blue;
+      font-size: 20px;
+    }
+
+    #continueButton {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+          <img src="C:\Users\user\Pictures\Screenshots\logo2.jpg" width="50" height="50" alt="VirtuHire">
+        <a href="VHedited.html" class="btn btn-primary">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="interview-questions">
+    <div class="container">
+      <h3>Quiz on Interview based questions on <span id="selectedDomain">Network Engineer</span></h3>
+      <div id="quiz">
+        <p id="question">Question 1. Which Algorithm is used in transparent bridges?</p>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="a" id="answerA">
+            Forward learning
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="b" id="answerB">
+            Backward learning
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="c" id="answerC">
+            Reserved backward learning
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="d" id="answerD">
+            Reserved forward learning
+          </label>
+        </div>
+        <p id="timer">30 seconds remaining</p> <!-- Add timer display -->
+        <button onclick="checkAnswer()">Submit Answer</button>
+      </div>
+      <p id="result"></p>
+      <div id="captionContainer"></div>
+    </div>
+  </section>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDomain = urlParams.get('domain');
+    const selectedDomainElement = document.getElementById('selectedDomain');
+    selectedDomainElement.textContent = selectedDomain || 'Network Engineer';
+
+    const quizData = [
+      {
+        question: "1. Which Algorithm is used in transparent bridges?",
+        answers: {
+          a: "Forward learning",
+          b: "Backward learning",
+          c: "Reserved backward learning",
+          d: "Reserved forward learning"
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "2. Repeater function at the ________ layer?",
+        answers: {
+          a: "Physical",
+          b: "Data link",
+          c: "Network",
+          d: "None of these",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "3. In Hierarchical routing, the routers are divided into ________?",
+        answers: {
+          a: "Zones",
+          b: "Cells",
+          c: "Regions",
+          d: "None of these",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "4. Sending a packet to all destinations simultaneously is called ________.",
+        answers: {
+          a: "Multicasting",
+          b: "Unicasting",
+          c: "Telecasting",
+          d: "Broadcasting",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "5. Which of the following routing algorithms takes into account the current network load?",
+        answers: {
+          a: "Broadcast",
+          b: "Shortest path",
+          c: "Flooding",
+          d: "Distance vector routing",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "6. Upon receipt of a bad segment, UDP________?",
+        answers: {
+          a: "It does flow control",
+          b: "It does error control",
+          c: "Retransmission",
+          d: "It does not do flow and error control",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "7. The address field of a frame in HDLC protocol contains the address of which station?",
+        answers: {
+          a: "Primary",
+          b: "Secondary",
+          c: "Tertiary",
+          d: "A station",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "8. In which layer the flow control policy will implement?",
+        answers: {
+          a: "Network layer",
+          b: "Transport layer",
+          c: "Application layer",
+          d: "Physical layer",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "9. In ________, each packet of a message need not follow the same path from sender to receiver.",
+        answers: {
+          a: "Circuit switching",
+          b: "Message switching",
+          c: "Virtual approach to packet switching",
+          d: "Datagram approach to packet switching",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "10. The solution to decrease the load on the network when congestion occurs is ________?",
+        answers: {
+          a: "Splitting the traffic over multiple routes",
+          b: "Increasing the transmission power",
+          c: "Usage of spare routers",
+          d: "Denying service to the users",
+        },
+        correctAnswer: "d"
+      }
+    ];
+
+    const questionElement = document.getElementById('question');
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timer');
+    const captionContainer = document.getElementById('captionContainer');
+
+    let currentQuestion = 0;
+    let userResponses = []; 
+    let questionTimer; 
+    let timeLeft = 30; 
+    
+    function showQuestion() {
+      clearInterval(questionTimer);
+      timeLeft = 30;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      const currentQuizData = quizData[currentQuestion];
+      questionElement.textContent = currentQuizData.question;
+
+      const options = Object.entries(currentQuizData.answers);
+      options.forEach(([optionKey, optionValue]) => {
+        document.getElementById(`answer${optionKey.toUpperCase()}`).nextSibling.textContent = optionValue;
+      });
+
+      questionTimer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      if (timeLeft === 0) {
+        clearInterval(questionTimer);
+        userResponses.push(null);
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      clearInterval(questionTimer);
+
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+      if (!selectedAnswer) {
+        userResponses.push(null);
+      } else {
+        const userAnswer = selectedAnswer.value;
+        userResponses.push(userAnswer);
+      }
+
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion();
+      } else {
+        showReview();
+      }
+    }
+
+    function showReview() {
+      document.getElementById('quiz').style.display = 'none';
+      timerElement.style.display = 'none';
+
+      let reviewHTML = '<h2>Quiz Review</h2>';
+      for (let i = 0; i < quizData.length; i++) {
+        const currentQuizData = quizData[i];
+        const userAnswer = userResponses[i];
+        const correctAnswer = currentQuizData.correctAnswer;
+
+        reviewHTML += `<p>Question ${i + 1}: ${currentQuizData.question}</p>`;
+        reviewHTML += `<p>Your Answer: ${userAnswer ? currentQuizData.answers[userAnswer] : 'Not attempted'}</p>`;
+        reviewHTML += `<p>Correct Answer: ${currentQuizData.answers[correctAnswer]}</p>`;
+        reviewHTML += '<hr>';
+      }
+
+      resultElement.innerHTML = reviewHTML;
+
+      showDoneButton();
+    }
+
+    function showDoneButton() {
+      const doneButton = document.createElement('button');
+      doneButton.textContent = 'Done';
+      doneButton.addEventListener('click', showCaptionAndContinue);
+      captionContainer.appendChild(doneButton);
+    }
+
+    function showCaptionAndContinue() {
+      captionContainer.textContent = 'All the best for your interview!';
+      captionContainer.style.color = 'blue';
+
+      const continueButton = document.createElement('button');
+      continueButton.textContent = 'Continue';
+      continueButton.addEventListener('click', redirectToHomePage);
+      captionContainer.appendChild(continueButton);
+    }
+
+    function redirectToHomePage() {
+      window.location.href = 'VHedited.html';
+    }
+    showQuestion();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

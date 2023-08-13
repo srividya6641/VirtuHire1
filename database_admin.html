@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtuHire - Interview Questions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      background-color: peachpuff;
+    }
+
+    #captionContainer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: blue;
+      font-size: 20px;
+    }
+
+    #continueButton {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <img src="C:\Users\user\Pictures\Screenshots\logo2.jpg" width="50" height="50" alt="VirtuHire">
+        <a href="VHedited.html" class="btn btn-primary">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="interview-questions">
+    <div class="container">
+      <h3>Quiz on Interview based questions on <span id="selectedDomain">Database Administrator</span></h3>
+      <div id="quiz">
+        <p id="question">1. What is the purpose of the "PRIMARY KEY" constraint in a database table?</p>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="a" id="answerA">
+            To ensure that a column uniquely identifies each row in the table
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="b" id="answerB">
+            To specify the main column for querying data quickly
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="c" id="answerC">
+            To create an index for faster data retrieval
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="d" id="answerD">
+            To enforce referential integrity between tables
+          </label>
+        </div>
+        <p id="timerDisplay">30 seconds remaining</p>
+        <button onclick="checkAnswer()">Submit Answer</button>
+      </div>
+      <p id="result"></p>
+      <div id="captionContainer"></div>
+    </div>
+  </section>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDomain = urlParams.get('domain');
+    const selectedDomainElement = document.getElementById('selectedDomain');
+    selectedDomainElement.textContent = selectedDomain || 'Database Administrator';
+
+    const quizData = [
+      {
+        question: "1. What is the purpose of the 'PRIMARY KEY' constraint in a database table?",
+        answers: {
+          a: "To ensure that a column uniquely identifies each row in the table",
+          b: "To specify the main column for querying data quickly",
+          c: "To create an index for faster data retrieval",
+          d: "To enforce referential integrity between tables",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "2. What is the difference between SQL and NoSQL databases?",
+        answers: {
+          a: "SQL databases are only used in small applications, while NoSQL databases are used in large-scale applications",
+          b: "SQL databases use structured schema, while NoSQL databases use unstructured schema",
+          c: "SQL databases are faster than NoSQL databases for read operations",
+          d: "NoSQL databases don't support joins between tables",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "3. Explain ACID properties in the context of database transactions.",
+        answers: {
+          a: "They represent the four main types of database operations: Add, Change, Isolate, and Delete",
+          b: "ACID properties ensure that database transactions are processed concurrently without conflicts",
+          c: "They stand for Atomicity, Consistency, Isolation, and Durability - ensuring data integrity and reliability in transactions",
+          d: "ACID properties are specific to NoSQL databases",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "4. What is a database index, and why is it important?",
+        answers: {
+          a: "A database index is a backup of the database that can be used for disaster recovery",
+          b: "It is a way to optimize data storage, reducing the overall size of the database",
+          c: "A database index is a data structure that improves the speed of data retrieval operations",
+          d: "It is used to enforce referential integrity between tables",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "5. Describe the differences between a full backup and an incremental backup.",
+        answers: {
+          a: "Full backup copies all data, while incremental backup only copies changes since the last backup",
+          b: "Full backup is faster than incremental backup",
+          c: "Incremental backup is more reliable than a full backup",
+          d: "Full backup is suitable for large databases, while incremental backup is for small databases",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "6. What are database transactions, and why are they used?",
+        answers: {
+          a: "Database transactions are used for querying and retrieving data from a database",
+          b: "They are a way to enforce security restrictions on database operations",
+          c: "Database transactions are a set of related operations that should be executed as a single unit of work",
+          d: "They are used to create snapshots of the database for reporting purposes",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "7. Explain the concept of database normalization.",
+        answers: {
+          a: "Database normalization is a process of converting data into a single format for efficient storage",
+          b: "It refers to the process of adding redundancy to the database for better performance",
+          c: "Database normalization is the process of creating a backup of the database",
+          d: "It involves combining multiple databases into a single database",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "8. What is a deadlock in the context of database management?",
+        answers: {
+          a: "A deadlock occurs when a database is down and inaccessible",
+          b: "It refers to a situation where two or more transactions are unable to proceed because they are waiting for each other to release locks",
+          c: "A deadlock is a type of data corruption that occurs in NoSQL databases",
+          d: "It is a state when the database is overloaded with too much data",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "9. How do you optimize database performance?",
+        answers: {
+          a: "By reducing the number of indexes on the database",
+          b: "Optimizing database performance is not possible",
+          c: "By using denormalization to increase data redundancy",
+          d: "By writing efficient queries, indexing, and caching",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "10. Explain the concept of a foreign key in a database table.",
+        answers: {
+          a: "A foreign key is a primary key of another table used for unique identification",
+          b: "It is a key used for encryption of sensitive data in the database",
+          c: "A foreign key is a secondary key used for sorting data in the table",
+          d: "It is a constraint used to enforce referential integrity between two related tables",
+        },
+        correctAnswer: "d"
+      }
+    ];
+
+    const questionElement = document.getElementById('question');
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timerDisplay');
+    const captionContainer = document.getElementById('captionContainer');
+
+    let currentQuestion = 0;
+    let userResponses = [];
+    let questionTimer;
+    let timeLeft = 30;
+
+    function showQuestion() {
+      clearInterval(questionTimer);
+      timeLeft = 30;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      const currentQuizData = quizData[currentQuestion];
+      questionElement.textContent = currentQuizData.question;
+
+      const options = Object.entries(currentQuizData.answers);
+      options.forEach(([optionKey, optionValue]) => {
+        document.getElementById(`answer${optionKey.toUpperCase()}`).nextSibling.textContent = optionValue;
+      });
+
+      questionTimer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      if (timeLeft === 0) {
+        clearInterval(questionTimer);
+        userResponses.push(null);
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      clearInterval(questionTimer);
+
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+      if (!selectedAnswer) {
+        userResponses.push(null);
+      } else {
+        const userAnswer = selectedAnswer.value;
+        userResponses.push(userAnswer);
+      }
+
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion();
+      } else {
+        showReview();
+      }
+    }
+
+    function showReview() {
+      document.getElementById('quiz').style.display = 'none';
+      timerElement.style.display = 'none';
+
+      let reviewHTML = '<h2>Quiz Review</h2>';
+      for (let i = 0; i < quizData.length; i++) {
+        const currentQuizData = quizData[i];
+        const userAnswer = userResponses[i];
+        const correctAnswer = currentQuizData.correctAnswer;
+
+        reviewHTML += `<p>Question ${i + 1}: ${currentQuizData.question}</p>`;
+        reviewHTML += `<p>Your Answer: ${userAnswer ? currentQuizData.answers[userAnswer] : 'Not attempted'}</p>`;
+        reviewHTML += `<p>Correct Answer: ${currentQuizData.answers[correctAnswer]}</p>`;
+        reviewHTML += '<hr>';
+      }
+
+      resultElement.innerHTML = reviewHTML;
+
+      showDoneButton();
+    }
+
+    function showDoneButton() {
+      const doneButton = document.createElement('button');
+      doneButton.textContent = 'Done';
+      doneButton.addEventListener('click', showCaptionAndContinue);
+      captionContainer.appendChild(doneButton);
+    }
+
+    function showCaptionAndContinue() {
+      captionContainer.textContent = 'All the best for your interview!';
+      captionContainer.style.color = 'blue';
+
+      const continueButton = document.createElement('button');
+      continueButton.textContent = 'Continue';
+      continueButton.addEventListener('click', redirectToHomePage);
+      captionContainer.appendChild(continueButton);
+    }
+
+    function redirectToHomePage() {
+      window.location.href = 'VHedited.html';
+    }
+
+    showQuestion();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

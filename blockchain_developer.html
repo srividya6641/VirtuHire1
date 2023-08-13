@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtuHire - Interview Questions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      background-color: peachpuff;
+    }
+
+    #captionContainer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: blue;
+      font-size: 20px;
+    }
+
+    #continueButton {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <img src="C:\Users\user\Pictures\Screenshots\logo2.jpg" width="50" height="50" alt="VirtuHire">
+        <a href="VHedited.html" class="btn btn-primary">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="interview-questions">
+    <div class="container">
+      <h3>Quiz on Interview based questions on <span id="selectedDomain">Blockchain developer</span></h3>
+      <div id="quiz">
+        <p id="question">Question 1. What is a blockchain?</p>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="a" id="answerA">
+            A type of cryptocurrency
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="b" id="answerB">
+            A decentralized database with a chain of blocks
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="c" id="answerC">
+            A centralized ledger system
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="d" id="answerD">
+            A digital signature algorithm
+          </label>
+        </div>
+        <p id="timer">30 seconds remaining</p>
+        <button onclick="checkAnswer()">Submit Answer</button>
+      </div>
+      <p id="result"></p>
+      <div id="captionContainer"></div>
+    </div>
+  </section>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDomain = urlParams.get('domain');
+    const selectedDomainElement = document.getElementById('selectedDomain');
+    selectedDomainElement.textContent = selectedDomain || 'Blockchain developer';
+
+    const quizData = [
+      {
+        question: "1. What is a blockchain?",
+        answers: {
+          a: "A type of cryptocurrency",
+          b: "A decentralized database with a chain of blocks",
+          c: "A centralized ledger system",
+          d: "A digital signature algorithm"
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "2. What is the primary purpose of a smart contract in blockchain technology?",
+        answers: {
+          a: "Facilitating secure data storage",
+          b: "Managing user authentication",
+          c: "Enabling peer-to-peer payments",
+          d: "Automating and enforcing contract terms",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "3. What consensus mechanism is commonly used in the Bitcoin blockchain?",
+        answers: {
+          a: "Proof of Authority (PoA)",
+          b: "Delegated Proof of Stake (DPoS)",
+          c: "Proof of Work (PoW)",
+          d: "Proof of Stake (PoS)",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "4. Which programming language is typically used for coding smart contracts on the Ethereum platform?",
+        answers: {
+          a: "Java",
+          b: "Solidity",
+          c: "Python",
+          d: "C++",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "5. What is the purpose of a 'wallet' in the context of blockchain?",
+        answers: {
+          a: "Storing physical cryptocurrency coins",
+          b: "Encrypting private keys",
+          c: "Managing blockchain nodes",
+          d: "Signing transactions and managing digital assets",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "6. What does the term 'gas' refer to in blockchain transactions?",
+        answers: {
+          a: "A unit of cryptocurrency used for payments",
+          b: "The energy source for mining",
+          c: "A measure of the transaction's processing power",
+          d: "A metric for measuring blockchain's efficiency",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "7. In a public blockchain network, who can participate in the consensus process?",
+        answers: {
+          a: "Only a select group of pre-approved nodes",
+          b: "Only the network administrator",
+          c: "Any node that meets the network requirements",
+          d: "Only the miners who solve complex mathematical problems",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "8. What is a 'fork' in the context of blockchain?",
+        answers: {
+          a: "A malicious attack on the blockchain network",
+          b: "The process of adding new blocks to the chain",
+          c: "A temporary network disruption",
+          d: "A permanent divergence in the blockchain's protocol",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "9. Which blockchain network allows for the creation of private, permissioned blockchains?",
+        answers: {
+          a: "Ethereum",
+          b: "Hyperledger Fabric",
+          c: "Ripple",
+          d: "Cardano",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "10. What is the purpose of a 'Merkle tree' in a blockchain?",
+        answers: {
+          a: "Encrypting the contents of each block",
+          b: "Storing user authentication data",
+          c: "Validating the integrity of data in each block",
+          d: "Facilitating peer-to-peer communication",
+        },
+        correctAnswer: "c"
+      }
+    ];
+
+    const questionElement = document.getElementById('question');
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timer');
+    const captionContainer = document.getElementById('captionContainer');
+
+    let currentQuestion = 0;
+    let userResponses = [];
+    let questionTimer;
+    let timeLeft = 30;
+
+    function showQuestion() {
+      clearInterval(questionTimer);
+      timeLeft = 30;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      const currentQuizData = quizData[currentQuestion];
+      questionElement.textContent = currentQuizData.question;
+
+      const options = Object.entries(currentQuizData.answers);
+      options.forEach(([optionKey, optionValue]) => {
+        document.getElementById(`answer${optionKey.toUpperCase()}`).nextSibling.textContent = optionValue;
+      });
+
+      questionTimer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      if (timeLeft === 0) {
+        clearInterval(questionTimer);
+        userResponses.push(null);
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      clearInterval(questionTimer);
+
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+      if (!selectedAnswer) {
+        userResponses.push(null);
+      } else {
+        const userAnswer = selectedAnswer.value;
+        userResponses.push(userAnswer);
+      }
+
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion();
+      } else {
+        showReview();
+      }
+    }
+
+    function showReview() {
+      document.getElementById('quiz').style.display = 'none';
+      timerElement.style.display = 'none';
+
+      let reviewHTML = '<h2>Quiz Review</h2>';
+      for (let i = 0; i < quizData.length; i++) {
+        const currentQuizData = quizData[i];
+        const userAnswer = userResponses[i];
+        const correctAnswer = currentQuizData.correctAnswer;
+
+        reviewHTML += `<p>Question ${i + 1}: ${currentQuizData.question}</p>`;
+        reviewHTML += `<p>Your Answer: ${userAnswer ? currentQuizData.answers[userAnswer] : 'Not attempted'}</p>`;
+        reviewHTML += `<p>Correct Answer: ${currentQuizData.answers[correctAnswer]}</p>`;
+        reviewHTML += '<hr>';
+      }
+
+      resultElement.innerHTML = reviewHTML;
+
+      showDoneButton();
+    }
+
+    function showDoneButton() {
+      const doneButton = document.createElement('button');
+      doneButton.textContent = 'Done';
+      doneButton.addEventListener('click', showCaptionAndContinue);
+      captionContainer.appendChild(doneButton);
+    }
+
+    function showCaptionAndContinue() {
+      captionContainer.textContent = 'All the best for your interview!';
+      captionContainer.style.color = 'blue';
+
+      const continueButton = document.createElement('button');
+      continueButton.textContent = 'Continue';
+      continueButton.addEventListener('click', redirectToHomePage);
+      captionContainer.appendChild(continueButton);
+    }
+
+    function redirectToHomePage() {
+      window.location.href = 'VHedited.html';
+    }
+    showQuestion();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

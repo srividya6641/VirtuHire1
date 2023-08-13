@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtuHire - Interview Questions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      background-color: peachpuff;
+    }
+
+    #captionContainer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: blue;
+      font-size: 20px;
+    }
+
+    #continueButton {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <img src="C:\Users\user\Pictures\Screenshots\logo2.jpg" width="50" height="50" alt="VirtuHire">
+        <a href="VHedited.html" class="btn btn-primary">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="interview-questions">
+    <div class="container">
+      <h3>Quiz on Interview based questions on <span id="selectedDomain">Full-stack developer</span></h3>
+      <div id="quiz">
+        <p id="question">Question 1. Which programming language is primarily used for front-end web development?</p>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="a" id="answerA">
+            Python
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="b" id="answerB">
+            Javascript
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="c" id="answerC">
+            Java
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="answer" value="d" id="answerD">
+            PHP
+          </label>
+        </div>
+        <p id="timer">30 seconds remaining</p>
+        <button onclick="checkAnswer()">Submit Answer</button>
+      </div>
+      <p id="result"></p>
+      <div id="captionContainer"></div>
+    </div>
+  </section>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDomain = urlParams.get('domain');
+    const selectedDomainElement = document.getElementById('selectedDomain');
+    selectedDomainElement.textContent = selectedDomain || 'Full-stack developer';
+
+    const quizData = [
+      {
+        question: "1. Which programming language is primarily used for front-end web development?",
+        answers: {
+          a: "Python",
+          b: "Javascript",
+          c: "Java",
+          d: "PHP"
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "2. What does CSS stand for in web development?",
+        answers: {
+          a: "Cascading Style Sheets",
+          b: "Computer Style Sheets",
+          c: "Centralized Style Sheets",
+          d: "Creative Style Sheets",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "3. Which of the following tags is used to create a hyperlink in HTML?",
+        answers: {
+          a: "<a>",
+          b: "<link>",
+          c: "<href>",
+          d: "<hyperlink>",
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "4. Which HTML element is used to define the structure of a web page?",
+        answers: {
+          a: "<head>",
+          b: "<body>",
+          c: "<section>",
+          d: "<main>",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "5. What is the purpose of media queries in responsive web design?",
+        answers: {
+          a: "To create complex animations",
+          b: "To add interactive elements",
+          c: "To apply different styles based on the screen size and resolution",
+          d: "To optimize database queries",
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "6. Which CSS property is used to create space between the content and border of an element?",
+        answers: {
+          a: "margin",
+          b: "padding",
+          c: "border-spacing",
+          d: "space-around",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "7. What does the 'box model' in CSS refer to?",
+        answers: {
+          a: "A layout model based on boxes and arrows",
+          b: "The process of organizing CSS code into boxes",
+          c: "A model for understanding how elements are displayed on a web page",
+          d: "The sizing and spacing properties of an HTML element",
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "8. Which version of HTML introduced semantic elements such as <header>, <footer>, and <nav>?",
+        answers: {
+          a: "HTML4",
+          b: "HTML5",
+          c: "XHTML",
+          d: "XML",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "9. What is the purpose of the 'alt' attribute in the <img> tag?",
+        answers: {
+          a: "It specifies the alignment of the image",
+          b: "It defines the alternative text for the image, displayed if the image cannot be loaded",
+          c: "It sets the size of the image",
+          d: "It links the image to another web page",
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "10. Which web design tool allows you to create visually appealing designs without writing code?",
+        answers: {
+          a: "Visual Studio Code",
+          b: "Sublime Text",
+          c: "Adobe Photoshop",
+          d: "Adobe XD",
+        },
+        correctAnswer: "d"
+      }
+    ];
+
+    const questionElement = document.getElementById('question');
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timer');
+    const captionContainer = document.getElementById('captionContainer');
+
+    let currentQuestion = 0;
+    let userResponses = [];
+    let questionTimer;
+    let timeLeft = 30;
+
+    function showQuestion() {
+      clearInterval(questionTimer);
+      timeLeft = 30;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      const currentQuizData = quizData[currentQuestion];
+      questionElement.textContent = currentQuizData.question;
+
+      const options = Object.entries(currentQuizData.answers);
+      options.forEach(([optionKey, optionValue]) => {
+        document.getElementById(`answer${optionKey.toUpperCase()}`).nextSibling.textContent = optionValue;
+      });
+
+      questionTimer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      timeLeft--;
+      timerElement.textContent = `${timeLeft} seconds remaining`;
+
+      if (timeLeft === 0) {
+        clearInterval(questionTimer);
+        userResponses.push(null);
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      clearInterval(questionTimer);
+
+      const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+      if (!selectedAnswer) {
+        userResponses.push(null);
+      } else {
+        const userAnswer = selectedAnswer.value;
+        userResponses.push(userAnswer);
+      }
+
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion();
+      } else {
+        showReview();
+      }
+    }
+
+    function showReview() {
+      document.getElementById('quiz').style.display = 'none';
+      timerElement.style.display = 'none';
+
+      let reviewHTML = '<h2>Quiz Review</h2>';
+      for (let i = 0; i < quizData.length; i++) {
+        const currentQuizData = quizData[i];
+        const userAnswer = userResponses[i];
+        const correctAnswer = currentQuizData.correctAnswer;
+
+        reviewHTML += `<p>Question ${i + 1}: ${currentQuizData.question}</p>`;
+        reviewHTML += `<p>Your Answer: ${userAnswer ? currentQuizData.answers[userAnswer] : 'Not attempted'}</p>`;
+        reviewHTML += `<p>Correct Answer: ${currentQuizData.answers[correctAnswer]}</p>`;
+        reviewHTML += '<hr>';
+      }
+
+      resultElement.innerHTML = reviewHTML;
+
+      showDoneButton();
+    }
+
+    function showDoneButton() {
+      const doneButton = document.createElement('button');
+      doneButton.textContent = 'Done';
+      doneButton.addEventListener('click', showCaptionAndContinue);
+      captionContainer.appendChild(doneButton);
+    }
+
+    function showCaptionAndContinue() {
+      captionContainer.textContent = 'All the best for your interview!';
+      captionContainer.style.color = 'blue';
+
+      const continueButton = document.createElement('button');
+      continueButton.textContent = 'Continue';
+      continueButton.addEventListener('click', redirectToHomePage);
+      captionContainer.appendChild(continueButton);
+    }
+
+    function redirectToHomePage() {
+      window.location.href = 'VHedited.html';
+    }
+
+    showQuestion();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
